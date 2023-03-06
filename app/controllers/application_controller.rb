@@ -150,6 +150,16 @@ rescue ActiveRecord::RecordNotFound
 end
 
 
+# Retrieve a specific task
+get '/tasks/:id' do
+  task = Task.find(params[:id])
+  task.to_json
+rescue ActiveRecord::RecordNotFound => e
+  error_response(404, e)
+end 
+
+
+
 
   
   
