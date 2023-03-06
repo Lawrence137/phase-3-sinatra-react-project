@@ -140,6 +140,16 @@ rescue ActiveRecord::RecordNotFound
 end
 
 
+# Delete a task
+delete '/tasks/delete/:id' do
+  task = Task.find(params[:id])
+  task.destroy
+  task.to_json
+rescue ActiveRecord::RecordNotFound
+  error_response(404, "Task not found")
+end
+
+
 
   
   
