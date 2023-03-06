@@ -77,8 +77,8 @@ class ApplicationController < Sinatra::Base
     #@method: log in user using email and password
     post '/login' do
       begin
-        user_data = User.find_by(email: @user['email'])
-        if user_data.password == @user['password']
+        user_data = User.find_by(email: params[:email])
+        if user_data && BCrypt::Password.new(user_data.password_hash) == params[:password]
           json_response(code: 200, data: {
             id: user_data.id,
             email: user_data.email
@@ -98,6 +98,22 @@ class ApplicationController < Sinatra::Base
     def user_data
       JSON.parse(request.body.read)
     end
+
+
+    # Create a new task
+post '/tasks' do
+  task = Task.new(
+    title: params[:title],
+    description: params[:description],
+    due: params[:due],
+    user_id: params[:user_id]
+  )
+  if task.save
+    task.to_json
+  else
+    error_response(422, task.errors.full_messages)
+  end
+end
   
   
   
