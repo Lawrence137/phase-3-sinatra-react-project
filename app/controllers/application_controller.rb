@@ -101,7 +101,7 @@ class ApplicationController < Sinatra::Base
 
 
     # Create a new task
-post '/tasks' do
+post '/tasks/create' do
   task = Task.new(
     title: params[:title],
     description: params[:description],
@@ -114,6 +114,15 @@ post '/tasks' do
     error_response(422, task.errors.full_messages)
   end
 end
+
+
+# Retrieve all tasks
+get "/tasks" do
+  Task.all.reverse.to_json
+end
+
+
+
   
   
   
