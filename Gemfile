@@ -4,6 +4,10 @@ source "https://rubygems.org"
 # https://github.com/sinatra/sinatra
 gem "sinatra", "~> 2.1"
 
+gem 'bcrypt', '~> 3.1', '>= 3.1.18'
+
+gem 'faker', '~> 3.1', '>= 3.1.1'
+
 # A fast and simple web server
 # https://github.com/macournoyer/thin
 gem "thin", "~> 1.8"
