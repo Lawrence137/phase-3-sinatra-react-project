@@ -122,6 +122,24 @@ get "/tasks" do
 end
 
 
+# Update a task
+put '/tasks/update/:id' do
+  task = Task.find(params[:id])
+  if task.update(
+    title: params[:title],
+    description: params[:description],
+    due: params[:due],
+    user_id: params[:user_id]
+  )
+    task.to_json
+  else
+    error_response(422, task.errors.full_messages)
+  end
+rescue ActiveRecord::RecordNotFound
+  error_response(404, "Task not found")
+end
+
+
 
   
   
