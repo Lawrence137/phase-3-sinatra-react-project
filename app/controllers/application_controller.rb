@@ -76,35 +76,15 @@ class ApplicationController < Sinatra::Base
   
     #@method: log in user using email and password
     post '/login' do
-      begin
-        user = nil
-        User.select(:email, :password_hash).each do |u|
-          if u.email == params[:email] && BCrypt::Password.new(u.password_hash) == params[:password]
-            user = u
-            break
-          end
+      # Find user that has a specific email
+      user = User.find_by(email: params[:email])
+      if user # && user.authenticate(params[:password])
+        json_response(data: user)
+      else
+        json_response(code: 401, data: { error: 'Invalid
+   email or password'})
         end
-        if user
-          json_response(code: 200, data: {
-            id: user.id,
-            email: user.email
-          })
-        else
-          json_response(code: 422, data: { error: "Your email/password combination is not correct" })
-        end
-      rescue => e
-        error_response(422, e)
-      end
-    end
-    
-    
-  
-    private
-  
-    # @helper: parse user JSON data
-    def user_data
-      JSON.parse(request.body.read)
-    end
+     end
 
 
     # Create a new task
@@ -116,7 +96,7 @@ post '/tasks/create' do
     user_id: params[:user_id]
   )
   if task.save
-    task.to_json
+    json_response(data: task)
   else
     error_response(422, task.errors.full_messages)
   end
@@ -125,7 +105,8 @@ end
 
 # Retrieve all tasks
 get "/tasks" do
-  Task.all.reverse.to_json
+  task = Task.all.reverse
+  json_response(data: task)
 end
 
 
@@ -138,7 +119,7 @@ patch '/tasks/update/:id' do
     due: params[:due],
     user_id: params[:user_id]
   )
-    task.to_json
+  json_response(data: task)
   else
     error_response(422, task.errors.full_messages)
   end
@@ -151,7 +132,7 @@ end
 delete '/tasks/delete/:id' do
   task = Task.find(params[:id])
   task.destroy
-  task.to_json
+  json_response(data: task)
 rescue ActiveRecord::RecordNotFound
   error_response(404, "Task not found")
 end
@@ -160,7 +141,7 @@ end
 # Retrieve a specific task
 get '/tasks/:id' do
   task = Task.find(params[:id])
-  task.to_json
+  json_response(data: task)
 rescue ActiveRecord::RecordNotFound => e
   error_response(404, e)
 end 
