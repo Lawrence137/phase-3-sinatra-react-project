@@ -77,11 +77,17 @@ class ApplicationController < Sinatra::Base
     #@method: log in user using email and password
     post '/login' do
       begin
-        user_data = User.find_by(email: params[:email])
-        if user_data && BCrypt::Password.new(user_data.password_hash) == params[:password]
+        user = nil
+        User.select(:email, :password_hash).each do |u|
+          if u.email == params[:email] && BCrypt::Password.new(u.password_hash) == params[:password]
+            user = u
+            break
+          end
+        end
+        if user
           json_response(code: 200, data: {
-            id: user_data.id,
-            email: user_data.email
+            id: user.id,
+            email: user.email
           })
         else
           json_response(code: 422, data: { error: "Your email/password combination is not correct" })
@@ -90,6 +96,7 @@ class ApplicationController < Sinatra::Base
         error_response(422, e)
       end
     end
+    
     
   
     private
@@ -123,7 +130,7 @@ end
 
 
 # Update a task
-put '/tasks/update/:id' do
+patch '/tasks/update/:id' do
   task = Task.find(params[:id])
   if task.update(
     title: params[:title],
@@ -157,12 +164,5 @@ get '/tasks/:id' do
 rescue ActiveRecord::RecordNotFound => e
   error_response(404, e)
 end 
-
-
-
-
-  
-  
-  
 
 end

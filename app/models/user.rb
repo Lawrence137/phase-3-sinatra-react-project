@@ -1,9 +1,7 @@
-# require 'bcrypt'
+require 'bcrypt'
 
 class User < ActiveRecord::Base
   has_many :tasks
-
-  include BCrypt
 
   # retrieve password from hash
   def password
@@ -12,7 +10,7 @@ class User < ActiveRecord::Base
 
   # create the password hash
   def password=(new_pass)
-    @password = Password.create(new_pass)
+    @password = BCrypt::Password.create(new_pass)
     self.password_hash = @password
   end
 end
