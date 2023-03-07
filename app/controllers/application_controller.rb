@@ -89,17 +89,13 @@ class ApplicationController < Sinatra::Base
 
     # Create a new task
 post '/tasks/create' do
-  task = Task.new(
+  task = Task.create(
     title: params[:title],
     description: params[:description],
     due: params[:due],
     user_id: params[:user_id]
   )
-  if task.save
-    json_response(data: task)
-  else
-    error_response(422, task.errors.full_messages)
-  end
+ json_response(data: task)
 end
 
 
