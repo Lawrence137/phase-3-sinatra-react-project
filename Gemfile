@@ -49,6 +49,13 @@ group :development do
   gem "rerun"
 end
 
+group :production do
+
+  # Automatically reload when there are changes
+  # https://github.com/alexch/rerun
+  gem "rerun"
+end
+
 # These gems will only be used when we are running tests
 group :test do
   gem "database_cleaner", "~> 2.0"
