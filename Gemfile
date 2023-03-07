@@ -8,6 +8,8 @@ gem 'bcrypt', '~> 3.1', '>= 3.1.18'
 
 gem 'faker', '~> 3.1', '>= 3.1.1'
 
+ruby '3.0.2'
+
 # A fast and simple web server
 # https://github.com/macournoyer/thin
 gem "thin", "~> 1.8"
